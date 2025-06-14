@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C0FA6633-95E2-44FB-9E3D-ABAC09EE4CA0}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>WindowsFormsApp1</RootNamespace>
+    <AssemblyName>WindowsFormsApp1</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AST.cs" />
+    <Compile Include="Canvas.cs" />
+    <Compile Include="Declaraciones\Block.cs" />
+    <Compile Include="Declaraciones\Color.cs" />
+    <Compile Include="Declaraciones\DrawCircle.cs" />
+    <Compile Include="Declaraciones\DrawLine.cs" />
+    <Compile Include="Declaraciones\DrawRectangle.cs" />
+    <Compile Include="Declaraciones\ExpresionEvaluator.cs" />
+    <Compile Include="Declaraciones\Fill.cs" />
+    <Compile Include="Declaraciones\GetActualX.cs" />
+    <Compile Include="Declaraciones\GetActualY.cs" />
+    <Compile Include="Declaraciones\GetCanvasSize.cs" />
+    <Compile Include="Declaraciones\GetColorCount.cs" />
+    <Compile Include="Declaraciones\Goto.cs" />
+    <Compile Include="Declaraciones\IsBrushColor.cs" />
+    <Compile Include="Declaraciones\IsBrushSize.cs" />
+    <Compile Include="Declaraciones\IsCanvasColor.cs" />
+    <Compile Include="Declaraciones\Label.cs" />
+    <Compile Include="Declaraciones\Size.cs" />
+    <Compile Include="Declaraciones\Spawn.cs" />
+    <Compile Include="Declaraciones\VarDeclaration.cs" />
+    <Compile Include="Entorno.cs" />
+    <Compile Include="Error.cs" />
+    <Compile Include="Expresiones\Aritmeticas\Addition.cs" />
+    <Compile Include="Expresiones\Aritmeticas\Divition.cs" />
+    <Compile Include="Expresiones\Aritmeticas\Grouping.cs" />
+    <Compile Include="Expresiones\Aritmeticas\Module.cs" />
+    <Compile Include="Expresiones\Aritmeticas\Multiplication.cs" />
+    <Compile Include="Expresiones\Aritmeticas\Negation.cs" />
+    <Compile Include="Expresiones\Aritmeticas\Pow.cs" />
+    <Compile Include="Expresiones\Aritmeticas\Substraction.cs" />
+    <Compile Include="Expresiones\Booleanas\And.cs" />
+    <Compile Include="Expresiones\Booleanas\Not.cs" />
+    <Compile Include="Expresiones\Booleanas\Or.cs" />
+    <Compile Include="Expresiones\Comparativas\Diferent.cs" />
+    <Compile Include="Expresiones\Comparativas\Equal.cs" />
+    <Compile Include="Expresiones\Comparativas\GreaterOrEqual.cs" />
+    <Compile Include="Expresiones\Comparativas\GreaterThan.cs" />
+    <Compile Include="Expresiones\Comparativas\LessOrEqual.cs" />
+    <Compile Include="Expresiones\Comparativas\LessThan.cs" />
+    <Compile Include="Expresiones\Principales\Booleano.cs" />
+    <Compile Include="Expresiones\Principales\Cadena.cs" />
+    <Compile Include="Expresiones\Principales\Numero.cs" />
+    <Compile Include="Expresiones\Principales\Variable.cs" />
+    <Compile Include="Expresions.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Parser.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scanner.cs" />
+    <Compile Include="Token.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Imagen de WhatsApp 2024-11-27 a las 22.34.46_5cf0f35d.jpg" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
