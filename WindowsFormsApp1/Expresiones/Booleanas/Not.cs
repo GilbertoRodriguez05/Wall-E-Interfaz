@@ -6,9 +6,11 @@ namespace WindowsFormsApp1
     class Not : Expresions
     {
         public override object value { get; set; }
-        public Not(bool value)
+        public int line;
+        public Not(bool value, int line)
         {
             this.value = !value;
+            this.line = line;
         }
         public override void Execute()
         {

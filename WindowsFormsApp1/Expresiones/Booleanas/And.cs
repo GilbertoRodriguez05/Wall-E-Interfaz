@@ -7,10 +7,12 @@ namespace WindowsFormsApp1
     class And : BinaryExpresions
     {
         public override object value { get; set; }
-        public And(Expresions Right, Expresions Left)
+        public int line;
+        public And(Expresions Right, Expresions Left, int line)
         {
             this.Right = Right;
             this.Left = Left;
+            this.line = line;
         }
         public override void Execute()
         {
@@ -24,7 +26,7 @@ namespace WindowsFormsApp1
             bool left = Left.SemanticCheck(errors, entorno);
             if (Right.Type(entorno) != ExpresionsTypes.Bool || Left.Type(entorno) != ExpresionsTypes.Bool)
             {
-                errors.Add(new Error(TypeOfError.Expected, "Solo se puede aplicar a expresiones booleanas"));
+                errors.Add(new Error(TypeOfError.Expected, "Solo se puede aplicar a expresiones booleanas", line));
                 return false;
             }
             return right && left;

@@ -25,7 +25,7 @@ namespace WindowsFormsApp1
                 ActualX = 0;
                 ActualY = 0;
                 BrushColor = Colors.Black; // Valor por defecto
-                InicializarCanvas(Colors.White);
+                InicializarCanvas(Colors.Transparent);
             }
 
             public int Filas => Height;
@@ -33,6 +33,7 @@ namespace WindowsFormsApp1
 
             public void InicializarCanvas(Colors color)
             {
+            BrushSize = 1;
                 for (int i = 0; i < Height; i++)
                 {
                     for (int j = 0; j < Width; j++)
@@ -49,7 +50,7 @@ namespace WindowsFormsApp1
                 // Inicializar con blanco
                 for (int i = 0; i < newHeight; i++)
                     for (int j = 0; j < newWidth; j++)
-                        newBoard[i, j] = Colors.White;
+                        newBoard[i, j] = Colors.Transparent;
 
                 // Copiar contenido existente
                 int copyWidth = Math.Min(Width, newWidth);

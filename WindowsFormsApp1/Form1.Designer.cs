@@ -50,7 +50,7 @@ namespace WindowsFormsApp1
             // errorsLabel
             // 
             this.errorsLabel.AutoSize = true;
-            this.errorsLabel.Location = new System.Drawing.Point(792, 561);
+            this.errorsLabel.Location = new System.Drawing.Point(844, 613);
             this.errorsLabel.Name = "errorsLabel";
             this.errorsLabel.Size = new System.Drawing.Size(43, 16);
             this.errorsLabel.TabIndex = 0;
@@ -68,7 +68,7 @@ namespace WindowsFormsApp1
             // saveButton
             // 
             this.saveButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.saveButton.Location = new System.Drawing.Point(1284, 54);
+            this.saveButton.Location = new System.Drawing.Point(1284, 45);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(88, 38);
             this.saveButton.TabIndex = 2;
@@ -81,7 +81,7 @@ namespace WindowsFormsApp1
             this.loadButton.AllowDrop = true;
             this.loadButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.loadButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.loadButton.Location = new System.Drawing.Point(1148, 54);
+            this.loadButton.Location = new System.Drawing.Point(1148, 45);
             this.loadButton.Name = "loadButton";
             this.loadButton.Size = new System.Drawing.Size(102, 38);
             this.loadButton.TabIndex = 3;
@@ -92,7 +92,7 @@ namespace WindowsFormsApp1
             // executeButton
             // 
             this.executeButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.executeButton.Location = new System.Drawing.Point(1020, 54);
+            this.executeButton.Location = new System.Drawing.Point(1020, 45);
             this.executeButton.Name = "executeButton";
             this.executeButton.Size = new System.Drawing.Size(89, 38);
             this.executeButton.TabIndex = 4;
@@ -102,9 +102,9 @@ namespace WindowsFormsApp1
             // 
             // TextEditor
             // 
-            this.TextEditor.Location = new System.Drawing.Point(854, 117);
+            this.TextEditor.Location = new System.Drawing.Point(893, 108);
             this.TextEditor.Name = "TextEditor";
-            this.TextEditor.Size = new System.Drawing.Size(518, 441);
+            this.TextEditor.Size = new System.Drawing.Size(534, 499);
             this.TextEditor.TabIndex = 5;
             this.TextEditor.Text = "";
             this.TextEditor.WordWrap = false;
@@ -114,7 +114,7 @@ namespace WindowsFormsApp1
             this.picCanvas.Cursor = System.Windows.Forms.Cursors.No;
             this.picCanvas.Location = new System.Drawing.Point(12, 54);
             this.picCanvas.Name = "picCanvas";
-            this.picCanvas.Size = new System.Drawing.Size(713, 504);
+            this.picCanvas.Size = new System.Drawing.Size(794, 640);
             this.picCanvas.TabIndex = 7;
             this.picCanvas.TabStop = false;
             // 
@@ -133,15 +133,16 @@ namespace WindowsFormsApp1
             this.pnlLineNumbers.AllowDrop = true;
             this.pnlLineNumbers.BackColor = System.Drawing.SystemColors.MenuHighlight;
             this.pnlLineNumbers.Cursor = System.Windows.Forms.Cursors.No;
-            this.pnlLineNumbers.Location = new System.Drawing.Point(795, 117);
+            this.pnlLineNumbers.Location = new System.Drawing.Point(845, 108);
             this.pnlLineNumbers.Name = "pnlLineNumbers";
-            this.pnlLineNumbers.Size = new System.Drawing.Size(42, 441);
+            this.pnlLineNumbers.Size = new System.Drawing.Size(42, 499);
             this.pnlLineNumbers.TabIndex = 8;
+            this.pnlLineNumbers.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlLineNumbers_Paint_1);
             // 
             // ResizeButton
             // 
             this.ResizeButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.ResizeButton.Location = new System.Drawing.Point(893, 54);
+            this.ResizeButton.Location = new System.Drawing.Point(893, 45);
             this.ResizeButton.Name = "ResizeButton";
             this.ResizeButton.Size = new System.Drawing.Size(89, 38);
             this.ResizeButton.TabIndex = 9;
@@ -152,7 +153,7 @@ namespace WindowsFormsApp1
             // numericUpDown1
             // 
             this.numericUpDown1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.numericUpDown1.Location = new System.Drawing.Point(893, 89);
+            this.numericUpDown1.Location = new System.Drawing.Point(893, 80);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             256,
             0,
@@ -164,18 +165,19 @@ namespace WindowsFormsApp1
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(795, 580);
+            this.richTextBox1.Location = new System.Drawing.Point(845, 632);
             this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
             this.richTextBox1.Size = new System.Drawing.Size(577, 111);
             this.richTextBox1.TabIndex = 11;
             this.richTextBox1.Text = "";
-            this.richTextBox1.ReadOnly = true;
+            this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1384, 653);
+            this.ClientSize = new System.Drawing.Size(1439, 706);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.ResizeButton);

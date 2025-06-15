@@ -7,11 +7,13 @@ namespace WindowsFormsApp1
     {
         Expresions size;
         Canvas canvas;
+        int line;
         public override object value { get; set; }
-        public IsBrushSize(Expresions size, Canvas canvas)
+        public IsBrushSize(Expresions size, Canvas canvas, int line)
         {
             this.size = size;
             this.canvas = canvas;
+            this.line = line;
         }
         public override void Execute()
         {
@@ -23,7 +25,7 @@ namespace WindowsFormsApp1
         {
             if (size.Type(entorno) != ExpresionsTypes.Numero)
             {
-                errors.Add(new Error(TypeOfError.Expected, "Se esperaba un tipo int"));
+                errors.Add(new Error(TypeOfError.Expected, "Se esperaba un tipo int", line));
                 return false;
             }
             return true;

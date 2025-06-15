@@ -8,12 +8,14 @@ namespace WindowsFormsApp1
         Entorno entorno;
         public Block block;
         public string name;
-        public Label(string name, Block block, Entorno entorno)
+        public int line;
+        public Label(string name, Block block, Entorno entorno, int line)
         {
             this.name = name;
             this.block = block;
             this.entorno = entorno;
-            entorno.SetLabel(name,block);
+            entorno.SetLabel(name, block);
+            this.line = line;
         }
         public override void Execute()
         {
@@ -23,7 +25,7 @@ namespace WindowsFormsApp1
         {
             if (!IsIdentifier(name))
             {
-                errors.Add(new Error(TypeOfError.Invalid, "Label no valido"));
+                errors.Add(new Error(TypeOfError.Invalid, "Label no valido", line));
                 return false;
             }
             return true;

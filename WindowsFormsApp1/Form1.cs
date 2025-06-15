@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -26,7 +27,7 @@ namespace WindowsFormsApp1
 
         private void InitializeCanvas()
         {
-            int initialSize = 40;
+            int initialSize = 50;
             drawingCanvas = new Canvas(initialSize, initialSize);
             numericUpDown1.Value = initialSize;
             UpdatePictureBoxSize();
@@ -36,7 +37,6 @@ namespace WindowsFormsApp1
         {
             picCanvas.SizeMode = PictureBoxSizeMode.Normal;
             picCanvas.Paint += PicCanvas_Paint;
-            picCanvas.MouseDown += PicCanvas_MouseDown;
             UpdatePictureBoxSize();
         }
 
@@ -50,20 +50,6 @@ namespace WindowsFormsApp1
             picCanvas.Invalidate();
         }
 
-        private void PicCanvas_MouseDown(object sender, MouseEventArgs e)
-        {
-            int canvasX = e.X / pixelSize;
-            int canvasY = e.Y / pixelSize;
-
-            if (canvasX >= 0 && canvasX < drawingCanvas.Width &&
-                canvasY >= 0 && canvasY < drawingCanvas.Height)
-            {
-                drawingCanvas.ActualX = canvasX;
-                drawingCanvas.ActualY = canvasY;
-                drawingCanvas.Board[canvasY, canvasX] = drawingCanvas.BrushColor;
-                picCanvas.Invalidate();
-            }
-        }
         private void DrawWallEPositionIndicator(Graphics g)
         {
             if (drawingCanvas == null) return;
@@ -245,6 +231,16 @@ namespace WindowsFormsApp1
         private void rtbCode_Resize(object sender, EventArgs e)
         {
             pnlLineNumbers.Invalidate();
+        }
+
+        private void pnlLineNumbers_Paint_1(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

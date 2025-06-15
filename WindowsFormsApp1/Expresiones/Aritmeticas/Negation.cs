@@ -10,10 +10,12 @@ namespace WindowsFormsApp1.Expresiones.Aritmeticas
     internal class Negation : Expresions
     {
         public override object value { get; set; }
+        public int line;
 
-        public Negation(int tvalue)
+        public Negation(int tvalue, int line)
         {
-            this.value = -tvalue; //El valor que se pase se cambia de signo
+            this.value = -tvalue;
+            this.line = line;
         }
 
         public override void Execute()

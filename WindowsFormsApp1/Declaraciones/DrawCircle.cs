@@ -13,12 +13,14 @@ namespace WindowsFormsApp1
         Expresions dirY;
         Expresions radius;
         Canvas canvas;
-        public DrawCircle(Expresions dirX, Expresions dirY, Expresions radius, Canvas canvas)
+        int line;
+        public DrawCircle(Expresions dirX, Expresions dirY, Expresions radius, Canvas canvas, int line)
         {
             this.dirX = dirX;
             this.dirY = dirY;
             this.radius = radius;
             this.canvas = canvas;
+            this.line = line;
         }
         public override void Execute()
         {
@@ -44,22 +46,22 @@ namespace WindowsFormsApp1
             bool R = radius.SemanticCheck(errors, entorno);
             if (dirX.Type(entorno) != ExpresionsTypes.Numero || dirY.Type(entorno) != ExpresionsTypes.Numero || radius.Type(entorno) != ExpresionsTypes.Numero)
             {
-                errors.Add(new Error(TypeOfError.Expected, "Se esperaba un tipo int"));
+                errors.Add(new Error(TypeOfError.Expected, "Se esperaba un tipo int", line));
                 return false;
             }
             else if (x * r + canvas.ActualX < 0 || x * r + canvas.ActualX >= canvas.Filas)
             {
-                errors.Add(new Error(TypeOfError.Invalid, "El centro del circulo tiene que estar dentro de los limites del canvas"));
+                errors.Add(new Error(TypeOfError.Invalid, "El centro del circulo tiene que estar dentro de los limites del canvas", line));
                 return false;
             }
             else if (y * r + canvas.ActualY < 0 || y * r + canvas.ActualY >= canvas.Columnas)
             {
-                errors.Add(new Error(TypeOfError.Invalid, "El centro del circulo tiene que estar dentro de los limites del canvas"));
+                errors.Add(new Error(TypeOfError.Invalid, "El centro del circulo tiene que estar dentro de los limites del canvas", line));
                 return false;
             }
             else if (!Directions.Contains((x, y)))
             {
-                errors.Add(new Error(TypeOfError.Invalid, "Direccion no valida"));
+                errors.Add(new Error(TypeOfError.Invalid, "Direccion no valida", line));
             }
             return X && Y && R;
         }

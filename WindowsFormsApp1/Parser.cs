@@ -16,7 +16,7 @@ namespace WindowsFormsApp1
         public int Current = 0;
         public string code;
         Spawn spawn;
-        bool yaspawn;
+        bool SpawnCheck;
 
         public Parser(List<Token> tokens, List<Error> errors, Entorno entorno, Canvas canvas)
         {
@@ -24,7 +24,7 @@ namespace WindowsFormsApp1
             this.errors = errors;
             this.entorno = entorno;
             this.canvas = canvas;
-            yaspawn = false;
+            SpawnCheck = false;
         }
 
         public AST Main()
@@ -51,8 +51,8 @@ namespace WindowsFormsApp1
             }
 
             if (!Match(TokenTypes.SaltoLinea)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un salto de linea", 1));
-            spawn = new Spawn(x, y, canvas);
-            yaspawn = true;
+            spawn = new Spawn(x, y, canvas, 1);
+            SpawnCheck = true;
             return Block();
 
         }
@@ -66,7 +66,7 @@ namespace WindowsFormsApp1
             while (Match(TokenTypes.Or))
             {
                 Expresions right = And();
-                expresion = new Or(expresion, right);
+                expresion = new Or(expresion, right, Previous().line);
             }
             return expresion;
         }
@@ -76,7 +76,7 @@ namespace WindowsFormsApp1
             while (Match(TokenTypes.And))
             {
                 Expresions right = Igualdad();
-                expresion = new And(expresion, right);
+                expresion = new And(expresion, right, Previous().line);
             }
             return expresion;
         }
@@ -88,8 +88,8 @@ namespace WindowsFormsApp1
                 Token Operator = Previous();
                 Expresions right = Comparation();
                 
-                if (Operator.types == TokenTypes.Distinto) expresion = new Diferent(expresion, right);
-                else if (Operator.types == TokenTypes.Equal) expresion = new Equal(expresion, right);
+                if (Operator.types == TokenTypes.Distinto) expresion = new Diferent(expresion, right, Previous().line);
+                else if (Operator.types == TokenTypes.Equal) expresion = new Equal(expresion, right, Previous().line);
             }
             return expresion;
         }
@@ -101,13 +101,10 @@ namespace WindowsFormsApp1
                 
                 Token Operator = Previous();
                 Expresions right = Term();
-                if (Operator.types == TokenTypes.Mayor) expresion = new GreaterThan(expresion, right);
-                else if (Operator.types == TokenTypes.Menor)
-                {
-                    expresion = new LessThan(expresion, right);
-                }
-                else if (Operator.types == TokenTypes.MayorIgual) expresion = new GreaterOrEqual(expresion, right);
-                else if (Operator.types == TokenTypes.MenorIgual) expresion = new LessOrEqual(expresion, right);
+                if (Operator.types == TokenTypes.Mayor) expresion = new GreaterThan(expresion, right, Previous().line);
+                else if (Operator.types == TokenTypes.Menor) expresion = new LessThan(expresion, right, Previous().line);
+                else if (Operator.types == TokenTypes.MayorIgual) expresion = new GreaterOrEqual(expresion, right, Previous().line);
+                else if (Operator.types == TokenTypes.MenorIgual) expresion = new LessOrEqual(expresion, right, Previous().line);
             }
             return expresion;
         }
@@ -119,8 +116,8 @@ namespace WindowsFormsApp1
                 Token Operator = Previous();
                 Expresions right = Factor();
                 
-                if (Operator.types == TokenTypes.Suma) expresion = new Addition(expresion, right);
-                else if (Operator.types == TokenTypes.Resta) expresion = new Substraction(expresion, right);
+                if (Operator.types == TokenTypes.Suma) expresion = new Addition(expresion, right, Previous().line);
+                else if (Operator.types == TokenTypes.Resta) expresion = new Substraction(expresion, right, Previous().line);
             }
             return expresion;
         }
@@ -132,8 +129,8 @@ namespace WindowsFormsApp1
                 Token Operator = Previous();
                 Expresions right = Exponent();
                 
-                if (Operator.types == TokenTypes.Multiplicacion) expresion = new Multiplication(expresion, right);
-                else if (Operator.types == TokenTypes.Division) expresion = new Divition(expresion, right);
+                if (Operator.types == TokenTypes.Multiplicacion) expresion = new Multiplication(expresion, right, Previous().line);
+                else if (Operator.types == TokenTypes.Division) expresion = new Divition(expresion, right, Previous().line);
             }
             return expresion;
         }
@@ -145,8 +142,8 @@ namespace WindowsFormsApp1
                 Token Operator = Previous();
                 Expresions right = Negation();
 
-                if (Operator.types == TokenTypes.Potencia) expresions = new Pow(expresions, right);
-                else if (Operator.types == TokenTypes.Modulo) expresions = new Module(expresions, right);
+                if (Operator.types == TokenTypes.Potencia) expresions = new Pow(expresions, right, Previous().line);
+                else if (Operator.types == TokenTypes.Modulo) expresions = new Module(expresions, right, Previous().line);
             }
             return expresions;
         }
@@ -157,10 +154,10 @@ namespace WindowsFormsApp1
                 Token operador = Previous();
                 Expresions right = Negation();
 
-                if (operador.types == TokenTypes.Negacion) return new Not((bool)right.value);
+                if (operador.types == TokenTypes.Negacion) return new Not((bool)right.value, Previous().line);
                 else if (operador.types == TokenTypes.Resta)
                 {
-                    return new Negation(Convert.ToInt32(right.value));
+                    return new Negation(Convert.ToInt32(right.value), Previous().line);
                 }
             }
             return Primary();
@@ -182,12 +179,12 @@ namespace WindowsFormsApp1
             {
                 Expresions expresion = Expresions();
                 if (!Match(TokenTypes.CierraParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba )", Previous().line));
-                return new Grouping(expresion);
+                return new Grouping(expresion, Previous().line);
             }
             else if (Match(TokenTypes.Identificador))
             {
                 Token variable = Previous();
-                Expresions expr = new Variable(variable.lexeme, entorno);
+                Expresions expr = new Variable(variable.lexeme, entorno, Previous().line);
                 return expr;
             }
             else
@@ -264,7 +261,7 @@ namespace WindowsFormsApp1
             if (Check(TokenTypes.Identificador))
             {
                 Expresions expresions = Expresions();
-                ast = new ExpresionEvaluator(expresions);
+                ast = new ExpresionEvaluator(expresions, Actual().line);
                 if (Match(TokenTypes.Declaracion))
                 {
                     ast = VarDeclaration(expresions);
@@ -276,7 +273,7 @@ namespace WindowsFormsApp1
             }
             return ast;
         }
-        public bool sincronizar(Error error, TokenTypes final = TokenTypes.EOF) //Recupera el análisis después de un error
+        public bool sincronizar(Error error, TokenTypes final = TokenTypes.EOF)
         {
             errors.Add(error);
             while (!Match(final))
@@ -288,7 +285,7 @@ namespace WindowsFormsApp1
         }
 
 
-        public AST Color()
+        public AST Color()  
         {
             Cadena color = null;
             if (!Match(TokenTypes.AbreParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un abre parentesis", Previous().line));
@@ -298,8 +295,7 @@ namespace WindowsFormsApp1
 
             if (!Match(TokenTypes.CierraParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un cierra parentesis", Previous().line));
 
-            if (!Match(TokenTypes.SaltoLinea)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un salto de linea", Previous().line));
-            return new Colores(color, canvas);
+            return new Colores(color, canvas, Previous().line);
         }
         public AST Size()
         {
@@ -311,8 +307,7 @@ namespace WindowsFormsApp1
 
             if (!Match(TokenTypes.CierraParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un cierra parentesis", Previous().line));
 
-            if (!Match(TokenTypes.SaltoLinea)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un salto de linea", Previous().line));
-            return new Sizes(size, canvas);
+            return new Sizes(size, canvas, Previous().line);
         }
         public AST DrawLine()
         {
@@ -336,8 +331,7 @@ namespace WindowsFormsApp1
 
             if (!Match(TokenTypes.CierraParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un cierra parentesis", Previous().line));
 
-            if (!Match(TokenTypes.SaltoLinea)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un salto de linea", Previous().line));
-            return new DrawLine(intX, intY, Distance, canvas);
+            return new DrawLine(intX, intY, Distance, canvas, Previous().line);
         }
         public AST DrawCircle()
         {
@@ -361,8 +355,7 @@ namespace WindowsFormsApp1
 
             if (!Match(TokenTypes.CierraParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un cierra parentesis", Previous().line));
 
-            if (!Match(TokenTypes.SaltoLinea)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un salto de linea", Previous().line));
-            return new DrawCircle(intX, intY, radius, canvas);
+            return new DrawCircle(intX, intY, radius, canvas, Previous().line);
         }
         public AST DrawRectangle()
         {
@@ -398,86 +391,79 @@ namespace WindowsFormsApp1
 
             if (!Match(TokenTypes.CierraParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un cierra parentesis", Previous().line));
 
-            if (!Match(TokenTypes.SaltoLinea)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un salto de linea", Previous().line));
-            return new DrawRectangle(intX, intY, distance, width, height, canvas);
+            return new DrawRectangle(intX, intY, distance, width, height, canvas, Previous().line);
         }
         public AST Fill()
         {
             if (!Match(TokenTypes.AbreParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un abre parentesis", Previous().line));
             if (!Match(TokenTypes.CierraParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un cierra parentesis", Previous().line));
-            if (!Match(TokenTypes.SaltoLinea)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un salto de linea", Previous().line));
             return new Fill(canvas);
         }
         public Expresions GetActualX()
         {
             if (!Match(TokenTypes.AbreParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un abre parentesis", Previous().line));
             if (!Match(TokenTypes.CierraParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un cierra parentesis", Previous().line));
-            if (!Match(TokenTypes.SaltoLinea)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un salto de linea", Previous().line));
             return new GetActualX(canvas);
         }
         public Expresions GetActualY()
         {
             if (!Match(TokenTypes.AbreParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un abre parentesis", Previous().line));
             if (!Match(TokenTypes.CierraParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un cierra parentesis", Previous().line));
-            if (!Match(TokenTypes.SaltoLinea)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un salto de linea", Previous().line));
             return new GetActualY(canvas);
         }
         public Expresions GetCanvasSize()
         {
             if (!Match(TokenTypes.AbreParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un abre parentesis", Previous().line));
             if (!Match(TokenTypes.CierraParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un cierra parentesis", Previous().line));
-            if (!Match(TokenTypes.SaltoLinea)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un salto de linea", Previous().line));
             return new GetCanvasSize(canvas);
         }
         public Expresions GetColorCount()
         {
-            Cadena color = null;
-            Numero x1 = null;
-            Numero y1 = null;
-            Numero x2 = null;
-            Numero y2 = null;
+            Expresions color = null;
+            Expresions x1 = null;
+            Expresions y1 = null;
+            Expresions x2 = null;
+            Expresions y2 = null;
             if (!Match(TokenTypes.AbreParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un abre parentesis", Previous().line));
 
-            if (Match(TokenTypes.Numero)) color = new Cadena(Previous().lexeme);
-            else errors.Add(new Error(TypeOfError.Expected, "Se esperaba una cadena", Previous().line));
+            Expresions expr1 = Expresions();
+            color = expr1;
 
             if (!Match(TokenTypes.Coma)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba una coma", Previous().line));
 
-            if (Match(TokenTypes.Numero)) x1 = new Numero(Convert.ToInt32(Previous().literal));
-            else errors.Add(new Error(TypeOfError.Expected, "Se esperaba un numero", Previous().line));
+            Expresions expr2 = Expresions();
+            x1 = expr2;
 
             if (!Match(TokenTypes.Coma)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba una coma", Previous().line));
 
-            if (Match(TokenTypes.Numero)) y1 = new Numero(Convert.ToInt32(Previous().literal));
-            else errors.Add(new Error(TypeOfError.Expected, "Se esperaba un numero", Previous().line));
+            Expresions expr3 = Expresions();
+            y1 = expr3;
 
             if (!Match(TokenTypes.Coma)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba una coma", Previous().line));
 
-            if (Match(TokenTypes.Numero)) x2 = new Numero(Convert.ToInt32(Previous().literal));
-            else errors.Add(new Error(TypeOfError.Expected, "Se esperaba un numero", Previous().line));
+            Expresions expr4 = Expresions();
+            x2 = expr4;
 
             if (!Match(TokenTypes.Coma)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba una coma", Previous().line));
 
-            if (Match(TokenTypes.Numero)) y2 = new Numero(Convert.ToInt32(Previous().literal));
-            else errors.Add(new Error(TypeOfError.Expected, "Se esperaba un numero", Previous().line));
+            Expresions expr5 = Expresions();
+            y2 = expr5;
 
             if (!Match(TokenTypes.CierraParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un cierra parentesis", Previous().line));
 
-            if (!Match(TokenTypes.SaltoLinea)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un salto de linea", Previous().line));
-            return new GetColorCount(color, x1, y1, x2, y2, canvas);
+            return new GetColorCount(color, x1, y1, x2, y2, canvas, Previous().line);
         }
         public Expresions IsBrushColor()
         {
-            Cadena color = null;
+            Expresions color = null;
             if (!Match(TokenTypes.AbreParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un abre parentesis", Previous().line));
 
-            if (Match(TokenTypes.Cadena)) color = new Cadena(Previous().lexeme);
-            else errors.Add(new Error(TypeOfError.Expected, "Se esperaba una cadena", Previous().line));
+            Expresions expr1 = Expresions();
+            color = expr1;
 
             if (!Match(TokenTypes.CierraParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un cierra parentesis", Previous().line));
 
-            if (!Match(TokenTypes.SaltoLinea)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un salto de linea", Previous().line));
-            return new IsBrushColor(color, canvas);
+            return new IsBrushColor(color, canvas, Previous().line);
         }
         public Expresions IsBrushSize()
         {
@@ -489,8 +475,7 @@ namespace WindowsFormsApp1
 
             if (!Match(TokenTypes.CierraParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un cierra parentesis", Previous().line));
 
-            if (!Match(TokenTypes.SaltoLinea)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un salto de linea", Previous().line));
-            return new IsBrushSize(k, canvas);
+            return new IsBrushSize(k, canvas, Previous().line);
         }
         public Expresions IsCanvasColor()
         {
@@ -514,16 +499,14 @@ namespace WindowsFormsApp1
 
             if (!Match(TokenTypes.CierraParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un cierra parentesis", Previous().line));
 
-            if (!Match(TokenTypes.SaltoLinea)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un salto de linea", Previous().line));
-            return new IsCanvasColor(color, v, h, canvas);
+            return new IsCanvasColor(color, v, h, canvas, Previous().line);
         }
         public AST Label()
         {
             Label label = null;
             Move();
             string name = Previous().lexeme;
-            if (!Match(TokenTypes.SaltoLinea)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un salto de linea", Actual().line));
-            label = new Label(name, Block(), entorno);
+            label = new Label(name, Block(), entorno, Previous().line);
             return label;
         }
         public AST GoTo()
@@ -540,17 +523,15 @@ namespace WindowsFormsApp1
             Expresions Condition = Expresions();
             if (!Match(TokenTypes.CierraParentesis)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba )", Previous().line));
 
-            if (!Match(TokenTypes.SaltoLinea)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un salto de linea", Previous().line));
-
-            return new GoTo(label, Condition, entorno);
+            return new GoTo(label, Condition, entorno, Previous().line);
         }
         public Block Block()
         {
             List<AST> Declarations = new List<AST>();
-            if (yaspawn)
+            if (SpawnCheck)
             {
                 Declarations.Add(spawn);
-                yaspawn = false;
+                SpawnCheck = false;
             }
             do
             {
@@ -558,10 +539,7 @@ namespace WindowsFormsApp1
                 try
                 {
                     if (Match(TokenTypes.SaltoLinea)) continue;
-                    else if (Match(TokenTypes.Spawn))
-                    {
-                        sincronizar(new Error(TypeOfError.Invalid, "No pueden haber 2 Spawn", Previous().line), TokenTypes.SaltoLinea);
-                    }
+                    else if (Match(TokenTypes.Spawn)) sincronizar(new Error(TypeOfError.Invalid, "No pueden haber 2 Spawn", Previous().line), TokenTypes.SaltoLinea);
                     else if (Match(TokenTypes.GetActualX)) Declarations.Add(new GetActualX(canvas));
                     else if (Match(TokenTypes.GetActualY)) Declarations.Add(new GetActualY(canvas));
                     else if (Match(TokenTypes.Color)) Declarations.Add(Color());
@@ -580,22 +558,20 @@ namespace WindowsFormsApp1
                     else if (Match(TokenTypes.GoTo)) Declarations.Add(GoTo());
                     else if (Check(TokenTypes.Identificador))
                     {
-                        if (Next(TokenTypes.Declaracion))
-                        {
-                            Declarations.Add(Declaration());
-                        }
-                        else
-                        {
-                            Declarations.Add(Label());
-                        }
+                        if (Next(TokenTypes.Declaracion)) Declarations.Add(Declaration());
+                        else Declarations.Add(Label());
                     }
-                    else Declarations.Add(Declaration());
+                    else throw new Error(TypeOfError.Invalid, "Declaracion invalida", Actual().line);
+
+                    if (IsAtEnd()) break;
+                    else if ((Check(TokenTypes.SaltoLinea) && Next(TokenTypes.EOF))) break;
+                    else if (!Match(TokenTypes.SaltoLinea)) errors.Add(new Error(TypeOfError.Expected, "Se esperaba un salto de linea", Previous().line));
                 }
                 catch (Error error)
                 {
                     if (sincronizar(error, TokenTypes.SaltoLinea)) break;
                 }
-            } while (!(Actual().types is TokenTypes.EOF));
+            } while (!(Actual().types == TokenTypes.EOF));
 
             return new Block(Declarations);
         }

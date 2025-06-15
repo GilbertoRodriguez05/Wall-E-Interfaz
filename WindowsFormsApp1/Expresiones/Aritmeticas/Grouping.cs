@@ -7,9 +7,11 @@ namespace WindowsFormsApp1
     {
         public override object value { get; set; }
         Expresions expresions;
-        public Grouping(Expresions expresions)
+        public int line;
+        public Grouping(Expresions expresions, int line)
         {
             this.expresions = expresions;
+            this.line = line;
         }
         public override void Execute()
         {
@@ -24,7 +26,7 @@ namespace WindowsFormsApp1
             else if (expresions.Type(entorno) == ExpresionsTypes.Bool) return group;
             else
             {
-                errors.Add(new Error(TypeOfError.Invalid, "Expresion invalida"));
+                errors.Add(new Error(TypeOfError.Invalid, "Expresion invalida", line));
                 return false;
             }
         }

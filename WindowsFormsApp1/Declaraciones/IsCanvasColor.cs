@@ -12,13 +12,15 @@ namespace WindowsFormsApp1
         Expresions x;
         Expresions y;
         Canvas canvas;
+        int line;
         public override object value { get; set; }
-        public IsCanvasColor(Expresions color, Expresions x, Expresions y, Canvas canvas)
+        public IsCanvasColor(Expresions color, Expresions x, Expresions y, Canvas canvas, int line)
         {
             this.color = color;
             this.x = x;
             this.y = y;
             this.canvas = canvas;
+            this.line = line;
         }
         public override void Execute()
         {
@@ -45,17 +47,17 @@ namespace WindowsFormsApp1
             bool c = color.SemanticCheck(errors, entorno);
             if (x.Type(entorno) != ExpresionsTypes.Numero || y.Type(entorno) != ExpresionsTypes.Numero || color.Type(entorno) != ExpresionsTypes.Cadena)
             {
-                errors.Add(new Error(TypeOfError.Expected, "Se esperaba un tipo string o un tipo int"));
+                errors.Add(new Error(TypeOfError.Expected, "Se esperaba un tipo string o un tipo int", line));
                 return false;
             }
             else if (X + canvas.ActualX < 0 || X + canvas.ActualX >= canvas.Filas || Y + canvas.ActualY < 0 || Y + canvas.ActualY >= canvas.Columnas)
             {
-                errors.Add(new Error(TypeOfError.Invalid, "La casilla tiene que estar dentro de las dimensiones del canvas"));
+                errors.Add(new Error(TypeOfError.Invalid, "La casilla tiene que estar dentro de las dimensiones del canvas", line));
                 return false;
             }
             else if (!DiferentsColor.Contains(Color.ToLower()))
             {
-                errors.Add(new Error(TypeOfError.Invalid, "El color no es válido"));
+                errors.Add(new Error(TypeOfError.Invalid, "El color no es válido", line));
                 return false;
             }
             return x1 && y1 && c;

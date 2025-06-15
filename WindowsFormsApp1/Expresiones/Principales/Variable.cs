@@ -10,10 +10,12 @@ namespace WindowsFormsApp1
         public Entorno entorno { get; set; }
         public override object value { get; set; }
         public ExpresionsTypes type { get; set; }
-        public Variable(string var, Entorno entorno)
+        public int line;
+        public Variable(string var, Entorno entorno, int line)
         {
             this.var = var;
-            this.entorno = entorno; 
+            this.entorno = entorno;
+            this.line = line;
         }
         public override void Execute()
         {
@@ -23,7 +25,7 @@ namespace WindowsFormsApp1
         {
             if (entorno.GetType(var) == ExpresionsTypes.Error)
             {
-                errors.Add(new Error(TypeOfError.VariableUndefined, "La variable no esta definida"));
+                errors.Add(new Error(TypeOfError.VariableUndefined, "La variable no esta definida", line));
                 type = ExpresionsTypes.Error;
                 return false;
             }

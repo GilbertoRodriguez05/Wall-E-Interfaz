@@ -7,10 +7,12 @@ namespace WindowsFormsApp1
     class Equal : BinaryExpresions
     {
         public override object value { get; set; }
-        public Equal(Expresions Right, Expresions Left)
+        public int line;
+        public Equal(Expresions Right, Expresions Left, int line)
         {
             this.Right = Right;
             this.Left = Left;
+            this.line = line;
         }
         public override void Execute()
         {
@@ -25,7 +27,7 @@ namespace WindowsFormsApp1
             bool left = Left.SemanticCheck(errors, entorno);
             if (Right.Type(entorno) != Left.Type(entorno))
             {
-                errors.Add(new Error(TypeOfError.Expected, "Solo se puede comparar entre dos expresiones del mismo tipo"));
+                errors.Add(new Error(TypeOfError.Expected, "Solo se puede comparar entre dos expresiones del mismo tipo", line));
                 return false;
             }
             return right && left;

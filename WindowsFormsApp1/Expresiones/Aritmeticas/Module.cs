@@ -7,10 +7,12 @@ namespace WindowsFormsApp1
     class Module : BinaryExpresions
     {
         public override object value { get; set; }
-        public Module(Expresions Right, Expresions Left)
+        public int line;
+        public Module(Expresions Right, Expresions Left, int line)
         {
             this.Right = Right;
             this.Left = Left;
+            this.line = line;
         }
         public override void Execute()
         {
@@ -24,7 +26,7 @@ namespace WindowsFormsApp1
             bool left = Left.SemanticCheck(errors, entorno);
             if (Right.Type(entorno) != ExpresionsTypes.Numero || Left.Type(entorno) != ExpresionsTypes.Numero)
             {
-                errors.Add(new Error(TypeOfError.Expected, "La operacion modulo solo se pude hacer entre dos numeros"));
+                errors.Add(new Error(TypeOfError.Expected, "La operacion modulo solo se pude hacer entre dos numeros", line));
                 return false;
             }
             return right && left;

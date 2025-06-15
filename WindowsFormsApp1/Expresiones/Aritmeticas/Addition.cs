@@ -6,10 +6,12 @@ namespace WindowsFormsApp1
     public class Addition : BinaryExpresions
     {
         public override object value { get; set; }
-        public Addition(Expresions Left, Expresions Right)
+        public int line;
+        public Addition(Expresions Left, Expresions Right, int line)
         {
             this.Left = Left;
             this.Right = Right;
+            this.line = line;
         }
         public override void Execute()
         {
@@ -28,7 +30,7 @@ namespace WindowsFormsApp1
             bool left = Left.SemanticCheck(errors, entorno);
             if (Right.Type(entorno) != ExpresionsTypes.Numero || Left.Type(entorno) != ExpresionsTypes.Numero)
             {
-                errors.Add(new Error(TypeOfError.Expected, "La adicion debe ser entre dos numeros"));
+                errors.Add(new Error(TypeOfError.Expected, "La adicion debe ser entre dos numeros", line));
                 return false;
             }
             return left && right;

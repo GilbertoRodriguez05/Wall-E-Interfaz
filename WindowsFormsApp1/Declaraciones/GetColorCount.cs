@@ -14,9 +14,10 @@ namespace WindowsFormsApp1
         Expresions y2;
         Expresions color;
         Canvas canvas;
+        int line;
         public override object value { get; set; }
 
-        public GetColorCount(Expresions x1, Expresions y1, Expresions x2, Expresions y2, Expresions color, Canvas canvas)
+        public GetColorCount(Expresions color, Expresions x1, Expresions y1, Expresions x2, Expresions y2, Canvas canvas, int line)
         {
             this.x1 = x1;
             this.y1 = y1;
@@ -24,6 +25,7 @@ namespace WindowsFormsApp1
             this.y2 = y2;
             this.color = color;
             this.canvas = canvas;
+            this.line = line;
         }
         public override void Execute()
         {
@@ -55,17 +57,17 @@ namespace WindowsFormsApp1
             bool colorValue = color.SemanticCheck(errors, entorno);
             if (x1.Type(entorno) != ExpresionsTypes.Numero || y1.Type(entorno) != ExpresionsTypes.Numero || y1.Type(entorno) != ExpresionsTypes.Numero || y2.Type(entorno) != ExpresionsTypes.Numero)
             {
-                errors.Add(new Error(TypeOfError.Expected, "Se esperaba un tipo int"));
+                errors.Add(new Error(TypeOfError.Expected, "Se esperaba un tipo int", line));
                 return false;
             }
             else if (color.Type(entorno) != ExpresionsTypes.Cadena)
             {
-                errors.Add(new Error(TypeOfError.Expected, "Se esperaba un tipo string"));
+                errors.Add(new Error(TypeOfError.Expected, "Se esperaba un tipo string", line));
                 return false;
             }
             else if (!DiferentsColor.Contains((string)color.value))
             {
-                errors.Add(new Error(TypeOfError.Invalid, "Color no valido"));
+                errors.Add(new Error(TypeOfError.Invalid, "Color no valido", line));
                 return false;
             }
             return X1 && X2 && Y1 && Y2 && colorValue;

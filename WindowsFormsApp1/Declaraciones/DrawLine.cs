@@ -15,12 +15,14 @@ namespace WindowsFormsApp1
         Expresions dirY;
         Expresions distance;
         Canvas canvas;
-        public DrawLine(Expresions dirX, Expresions dirY, Expresions distance, Canvas canvas)
+        int line;
+        public DrawLine(Expresions dirX, Expresions dirY, Expresions distance, Canvas canvas, int line)
         {
             this.dirX = dirX;
             this.dirY = dirY;
             this.distance = distance;
             this.canvas = canvas;
+            this.line = line;
         }
         public override void Execute()
         {
@@ -62,18 +64,22 @@ namespace WindowsFormsApp1
             bool dist = distance.SemanticCheck(errors, entorno);
             if (dirX.Type(entorno) != ExpresionsTypes.Numero || dirY.Type(entorno) != ExpresionsTypes.Numero || distance.Type(entorno) != ExpresionsTypes.Numero)
             {
-                errors.Add(new Error(TypeOfError.Expected, "Se esperaba un tipo int"));
+                errors.Add(new Error(TypeOfError.Expected, "Se esperaba un tipo int", line));
                 return false;
             }
             if (canvas.ActualX + x1 * dist1 < 0 || canvas.ActualX + x1 * dist1 > canvas.Filas)
             {
-                errors.Add(new Error(TypeOfError.Invalid, "La distancia se sale de los limites del canvas"));
+                errors.Add(new Error(TypeOfError.Invalid, "La distancia se sale de los limites del canvas", line));
                 return false;
             }
             if (canvas.ActualY + y1 * dist1 < 0 || canvas.ActualY + y1 * dist1 > canvas.Columnas)
             {
-                errors.Add(new Error(TypeOfError.Invalid, "La distancia se sale de los limites del canvas"));
+                errors.Add(new Error(TypeOfError.Invalid, "La distancia se sale de los limites del canvas", line));
                 return false;
+            }
+            if (!Directions.Contains((x1, y1)))
+            {
+                errors.Add(new Error(TypeOfError.Invalid, "Direccion no valida", line));
             }
             return x && y && dist;
         }

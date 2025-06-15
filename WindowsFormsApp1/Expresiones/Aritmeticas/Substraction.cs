@@ -7,10 +7,12 @@ namespace WindowsFormsApp1
     class Substraction : BinaryExpresions
     {
         public override object value { get; set; }
-        public Substraction(Expresions left, Expresions right)
+        public int line;
+        public Substraction(Expresions left, Expresions right, int line)
         {
             this.Right = right;
             this.Left = left;
+            this.line = line;
         }
         public override void Execute()
         {
@@ -24,7 +26,7 @@ namespace WindowsFormsApp1
             bool left = Left.SemanticCheck(errors, entorno);
             if (Right.Type(entorno) != ExpresionsTypes.Numero || Left.Type(entorno) != ExpresionsTypes.Numero)
             {
-                errors.Add(new Error(TypeOfError.Expected, "La resta tiene que ser entre dos numeros"));
+                errors.Add(new Error(TypeOfError.Expected, "La resta tiene que ser entre dos numeros", line));
                 return false;
             }
             return left && right;

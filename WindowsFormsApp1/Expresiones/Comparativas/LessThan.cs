@@ -7,10 +7,12 @@ namespace WindowsFormsApp1
     class LessThan : BinaryExpresions
     {
         public override object value { get; set; }
-        public LessThan(Expresions Left, Expresions Right)
+        public int line;
+        public LessThan(Expresions Left, Expresions Right, int line)
         {
             this.Right = Right;
             this.Left = Left;
+            this.line = line;
         }
         public override void Execute()
         {
@@ -25,7 +27,7 @@ namespace WindowsFormsApp1
             bool left = Left.SemanticCheck(errors, entorno);
             if (Right.Type(entorno) != ExpresionsTypes.Numero || Left.Type(entorno) != ExpresionsTypes.Numero)
             {
-                errors.Add(new Error(TypeOfError.Expected, "Solo se puede comparar entre dos numeros"));
+                errors.Add(new Error(TypeOfError.Expected, "Solo se puede comparar entre dos numeros", line));
                 return false;
             }
             return right && left;

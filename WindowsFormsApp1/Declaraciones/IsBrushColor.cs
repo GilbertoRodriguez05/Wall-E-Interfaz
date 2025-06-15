@@ -9,11 +9,13 @@ namespace WindowsFormsApp1
         public List<string> DiferentsColor = new List<string> { "blue", "red", "green", "yellow", "black", "white", "orange", "purple", "transparent" };
         Expresions color;
         Canvas canvas;
+        int line;
         public override object value { get; set; }
-        public IsBrushColor(Expresions color, Canvas canvas)
+        public IsBrushColor(Expresions color, Canvas canvas, int line)
         {
             this.color = color;
             this.canvas = canvas;
+            this.line = line;
         }
         public override void Execute()
         {
@@ -30,12 +32,12 @@ namespace WindowsFormsApp1
             colorValue = colorValue.Substring(1, colorValue.Length - 2);
             if (color.Type(entorno) != ExpresionsTypes.Cadena)
             {
-                errors.Add(new Error(TypeOfError.Expected, "Se esperaba un tipo string"));
+                errors.Add(new Error(TypeOfError.Expected, "Se esperaba un tipo string", line));
                 return false;
             }
             else if (!DiferentsColor.Contains(colorValue.ToLower()))
             {
-                errors.Add(new Error(TypeOfError.Invalid, "Color no definido"));
+                errors.Add(new Error(TypeOfError.Invalid, "Color no definido", line));
                 return false;
             }
             return true;

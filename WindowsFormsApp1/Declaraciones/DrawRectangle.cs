@@ -17,7 +17,8 @@ namespace WindowsFormsApp1
         Expresions width;
         Expresions distance;
         Canvas canvas;
-        public DrawRectangle(Expresions dirX, Expresions dirY, Expresions distance, Expresions width, Expresions height, Canvas canvas)
+        int line;
+        public DrawRectangle(Expresions dirX, Expresions dirY, Expresions distance, Expresions width, Expresions height, Canvas canvas, int line)
         {
             this.dirX = dirX;
             this.dirY = dirY;
@@ -25,6 +26,7 @@ namespace WindowsFormsApp1
             this.width = width;
             this.height = height;
             this.canvas = canvas;
+            this.line = line;
         }
         public override void Execute()
         {
@@ -55,17 +57,17 @@ namespace WindowsFormsApp1
             bool D = distance.SemanticCheck(errors, entorno);
             if (dirX.Type(entorno) != ExpresionsTypes.Numero || dirY.Type(entorno) != ExpresionsTypes.Numero || width.Type(entorno) != ExpresionsTypes.Numero || height.Type(entorno) != ExpresionsTypes.Numero || distance.Type(entorno) != ExpresionsTypes.Numero)
             {
-                errors.Add(new Error(TypeOfError.Expected, "Se esperaba un tipo int"));
+                errors.Add(new Error(TypeOfError.Expected, "Se esperaba un tipo int", line));
                 return false;
             }
             else if (x * d + canvas.ActualX < 0 || x * d + canvas.ActualX >= canvas.Filas)
             {
-                errors.Add(new Error(TypeOfError.Invalid, "El centro del rectangulo debe estar dentro de los limites del canvas"));
+                errors.Add(new Error(TypeOfError.Invalid, "El centro del rectangulo debe estar dentro de los limites del canvas", line));
                 return false;
             }
             else if (y * d + canvas.ActualY < 0 || y * d + canvas.ActualY >= canvas.Columnas)
             {
-                errors.Add(new Error(TypeOfError.Invalid, "El centro del rectangulo debe estar dentro de los limites del canvas"));
+                errors.Add(new Error(TypeOfError.Invalid, "El centro del rectangulo debe estar dentro de los limites del canvas", line));
                 return false;
             }
             return X && Y && W && H && D;
